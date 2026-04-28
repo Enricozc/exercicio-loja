@@ -2,43 +2,239 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Minha Loja</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise ERP | Controle de Estoque</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --border: #334155;
+        }
+
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        header { text-align: center; margin-bottom: 50px; }
+        
+        header h1 { 
+            font-size: 2.5rem; 
+            font-weight: 800; 
+            margin: 0;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p { color: var(--text-muted); margin-top: 10px; }
+
+        /* Grid de Dash */
+        .grid { 
+            display: grid; 
+            grid-template-columns: 1fr 2fr; 
+            gap: 30px; 
+            margin-bottom: 40px; 
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border); 
+            border-radius: 16px; 
+            padding: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        /* Inputs Estilizados */
+        .form-group { margin-bottom: 15px; }
+        
+        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
+
+        input, select {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        button {
+            width: 100%;
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover { background: var(--primary-hover); transform: translateY(-2px); }
+
+        /* Tabela Profissional */
+        .table-container { 
+            background: var(--card-bg); 
+            border-radius: 16px; 
+            border: 1px solid var(--border);
+            overflow: hidden; 
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        thead { background: #111827; }
+
+        th { 
+            padding: 15px 20px; 
+            text-align: left; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        td { padding: 18px 20px; border-bottom: 1px solid var(--border); }
+
+        tr:last-child td { border-bottom: none; }
+
+        .status-badge {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .price { font-family: monospace; color: var(--success); font-weight: bold; font-size: 1.1rem; }
+
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
-    <h1>Sistema de Loja FastAPI</h1>
 
-    <h2>Cadastrar Categoria</h2>
-    <form action="/categoria/nova" method="POST">
-        <input type="text" name="nome" placeholder="Nome" required>
-        <button type="submit">Salvar</button>
-    </form>
+    <div class="container">
+        <header>
+            <h1>STOCK MASTER Pro</h1>
+            <p>Gerenciamento Inteligente de Inventário</p>
+        </header>
 
-    <hr>
+        <div class="grid">
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+                <section class="card">
+                    <div class="card-title"><i class="fas fa-tags"></i> Categoria</div>
+                    <form action="/categoria/nova" method="POST">
+                        <div class="form-group">
+                            <input type="text" name="nome" placeholder="Ex: Periféricos" required>
+                        </div>
+                        <button type="submit"><i class="fas fa-plus"></i> Adicionar</button>
+                    </form>
+                </section>
 
-    <h2>Cadastrar Produto</h2>
-    <form action="/produto/novo" method="POST">
-        <input type="text" name="nome" placeholder="Nome do Produto" required>
-        <input type="number" step="0.01" name="preco" placeholder="Preço" required>
-        <input type="number" name="estoque" placeholder="Estoque" required>
-        <select name="categoria_id" required>
-            {% for cat in categorias %}
-                <option value="{{ cat.id }}">{{ cat.nome }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Cadastrar Produto</button>
-    </form>
+                <section class="card">
+                    <div class="card-title"><i class="fas fa-box"></i> Novo Item</div>
+                    <form action="/produto/novo" method="POST">
+                        <div class="form-group">
+                            <input type="text" name="nome" placeholder="Nome do Produto" required>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="form-group">
+                                <input type="number" step="0.01" name="preco" placeholder="R$ 0,00" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" name="estoque" placeholder="Qtd" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input list="cat-list" name="categoria_id" placeholder="ID ou Nome da Categoria" required>
+                            <datalist id="cat-list">
+                                {% for cat in categorias %}
+                                    <option value="{{ cat.id }}">{{ cat.nome }}</option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                        <button type="submit"><i class="fas fa-check"></i> Registrar Produto</button>
+                    </form>
+                </section>
+            </div>
 
-    <h2>Produtos no Estoque</h2>
-    <ul>
-        {% for prod in produtos %}
-            <li>
-                {{ prod.nome }} - R$ {{ prod.preco }}
-                (Categoria: {{ prod.categoria.nome if prod.categoria else 'Sem Categoria' }})
-            </li>
-        {% else %}
-            <li>Nenhum produto cadastrado ainda.</li>
-        {% endfor %}
-    </ul>
+            <section class="table-container">
+                <div style="padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-size: 1rem;">Inventário em Tempo Real</h3>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Total: {{ produtos|length }} itens</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Estoque</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prod in produtos %}
+                        <tr>
+                            <td><strong>{{ prod.nome }}</strong></td>
+                            <td><span class="status-badge">{{ prod.categoria.nome if prod.categoria else 'Geral' }}</span></td>
+                            <td><span class="price">R$ {{ prod.preco }}</span></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="width: 40px; height: 6px; background: #334155; border-radius: 10px;">
+                                        <div style="width: 70%; height: 100%; background: var(--primary); border-radius: 10px;"></div>
+                                    </div>
+                                    {{ prod.estoque }}
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 60px; color: var(--text-muted);">
+                                <i class="fas fa-folder-open" style="font-size: 2rem; display: block; margin-bottom: 10px;"></i>
+                                Nenhum registro encontrado no banco de dados.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
 </body>
 </html>

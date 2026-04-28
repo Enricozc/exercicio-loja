@@ -9,14 +9,12 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
-def home(request: Request, db: Session = Depends(get_db)):
-    produtos = db.query(models.Produto).all()
-    categorias = db.query(models.Categoria).all()
-    return templates.TemplateResponse("index.html", {
-        "request": request, 
-        "produtos": produtos, 
-        "categorias": categorias
-    })
+def index(request:Request):
+    return templates.TemplateResponse(
+        request,
+        "index.html",
+        {"request":request}
+    )
 
 @app.post("/categoria/nova")
 def criar_categoria(nome: str = Form(...), descricao: str = Form(None), db: Session = Depends(get_db)):
