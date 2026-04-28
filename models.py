@@ -9,7 +9,6 @@ class Categoria(Base):
     nome = Column(String, nullable=False)
     descricao = Column(String, nullable=True)
 
-   
     produtos = relationship("Produto", back_populates="categoria")
 
 class Produto(Base):
@@ -20,8 +19,5 @@ class Produto(Base):
     preco = Column(Numeric(10, 2), nullable=False)
     estoque = Column(Integer, nullable=False)
     
-   
     categoria_id = Column(Integer, ForeignKey("categorias.id"))
-
-    
     categoria = relationship("Categoria", back_populates="produtos")

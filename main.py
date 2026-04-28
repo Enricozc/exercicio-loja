@@ -8,7 +8,6 @@ import models
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-# ROTA PRINCIPAL: LISTAGEM
 @app.get("/")
 def home(request: Request, db: Session = Depends(get_db)):
     produtos = db.query(models.Produto).all()
@@ -19,17 +18,15 @@ def home(request: Request, db: Session = Depends(get_db)):
         "categorias": categorias
     })
 
-# ROTA PARA CADASTRAR CATEGORIA
 @app.post("/categoria/nova")
-def cadastrar_categoria(nome: str = Form(...), descricao: str = Form(None), db: Session = Depends(get_db)):
+def criar_categoria(nome: str = Form(...), descricao: str = Form(None), db: Session = Depends(get_db)):
     nova_cat = models.Categoria(nome=nome, descricao=descricao)
     db.add(nova_cat)
     db.commit()
     return RedirectResponse(url="/", status_code=303)
 
-# ROTA PARA CADASTRAR PRODUTO
 @app.post("/produto/novo")
-def cadastrar_produto(
+def criar_produto(
     nome: str = Form(...), 
     preco: float = Form(...), 
     estoque: int = Form(...), 
